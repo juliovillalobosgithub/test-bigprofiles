@@ -1,0 +1,6 @@
+<p-card [style]="{ width: '38rem' }">
+  <div class="box">
+    <h1 class="title">{{ title }}</h1>
+    <h1 [ngStyle]="{'color':getColor(status)}">{{ value }} {{ measure }}</h1>
+  </div>
+</p-card>

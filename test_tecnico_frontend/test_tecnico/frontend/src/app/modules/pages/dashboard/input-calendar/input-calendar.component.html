@@ -1,0 +1,12 @@
+<div class="card"> 
+    <p-calendar
+      [style]="{ width: '20rem' }"
+      [(ngModel)]="rangeDates"
+      selectionMode="range"
+      [showTime]="true"
+      inputId="range" 
+      (onClose)="onClose($event)"
+      [minDate]="min"
+      [maxDate]="max"
+    ></p-calendar>
+</div>

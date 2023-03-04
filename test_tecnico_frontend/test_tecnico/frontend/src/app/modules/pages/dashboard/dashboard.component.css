@@ -1,0 +1,9 @@
+ 
+.container_box {
+  display: flex;
+  justify-content: center;
+}
+
+.grid{
+  padding-top: 12px;
+}

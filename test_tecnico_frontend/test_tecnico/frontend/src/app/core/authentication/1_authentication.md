@@ -1,0 +1,2 @@
+# Qui ci sarà solo un servizio che gestisce il ciclo di vita da quando un utente accede a disconnettersi,
+# qui è dove puoi invocare il tuo localStorage per salvare il token dell'utente e creare metodi che ritieni convenienti.

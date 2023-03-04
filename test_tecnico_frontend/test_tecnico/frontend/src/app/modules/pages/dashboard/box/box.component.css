@@ -1,0 +1,12 @@
+.box{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.title{
+    opacity: 0.9;
+}
+
+ 

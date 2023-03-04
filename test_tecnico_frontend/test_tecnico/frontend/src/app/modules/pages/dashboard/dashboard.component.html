@@ -1,0 +1,54 @@
+<div class="grid">
+  <div class="col-12" style="text-align: right">
+    <app-input-calendar
+      (selectedChange)="calendarEmit($event)"
+    ></app-input-calendar>
+  </div>
+</div>
+
+<div class="grid" *ngIf="response">
+  <div class="col container_box">
+    <app-box
+      [title]="'Chiamate Totali'"
+      [value]="chiamateTotali"
+      [status]="'primary'"
+    ></app-box>
+  </div>
+
+  <div class="col container_box">
+    <app-box
+      [title]="'Errori Totali'"
+      [value]="erroriTotali"
+      [status]="'danger'"
+    ></app-box>
+  </div>
+
+  <div class="col container_box">
+    <app-box
+      [title]="'Tempo Risposta Medio'"
+      [value]="tempoRispostaMedio"
+      [status]="'success'"
+      [measure]="'ms'"
+    ></app-box>
+  </div>
+</div>
+
+<div class="grid" *ngIf="response">
+  <div class="col container_box">
+    <app-chart-line [data]="dataLine"></app-chart-line>
+  </div>
+
+  <div class="col container_box">
+    <app-chart-pie [percent]="percentualeErrori"></app-chart-pie>
+  </div>
+
+  <div class="col container_box">
+    <app-chart-bar [data]="dataBar"></app-chart-bar>
+  </div>
+</div>
+
+<div class="grid" *ngIf="response">
+  <div class="col-12">
+    <app-table-logs [data]="response.logs"></app-table-logs>
+  </div>
+</div>
