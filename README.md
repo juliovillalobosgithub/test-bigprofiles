@@ -5,6 +5,7 @@
 - Per avviare la creazioni dei containers in docker mi sono dovuto installare 
     - docker installlato
     - docker-compose installato
+    - Configurazione Kernell linux(Forzato)
     - All'interno della cartela test_tecnico lanciare da una powershell come amministratore
     - docker-compose -f "./docker-compose.yml" up --remove-orphans -V --build -d
     - Avviare i containers tramite dockers desktop
