@@ -1,35 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { map, tap, Observer } from 'rxjs';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { map, tap, Observer, Subscription } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api.service';
 import { Retrive } from '../../../shared/interfaces/retrive.interface';
-import { ChartFormat } from 'src/app/shared/interfaces/chartFormat';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.scss'], 
 })
-export class DashboardComponent implements OnInit {
-
+export class DashboardComponent implements OnInit, OnDestroy {
   response: Retrive;
+  retriveSubs: Subscription;
+  observer: Observer<any> = {
+    next: data => {
+      console.log(' [next]:', data);
+      this.loadChartLine();
+      this.loadChartPie();
+      this.loadChartBar();
+    },
+    error: error => console.warn(' [error]:', error),
+    complete: () => console.info(' [complete]')
+  };
 
   chiamateTotali: number;
   erroriTotali: number;
   tempoRispostaMedio: number;
 
-  labelsLine: any[] = [];
-
-  dataLine: ChartFormat = {
-    labels: [],
-    data: []
-  };
-
-  percentualeErrori: number;
-
-  dataBar: ChartFormat = {
-    labels: [],
-    data: []
-  };
+  dataLine: any;
+  dataPie: any;
+  dataBar: any;
 
   constructor(private apiService: ApiService) { }
 
@@ -41,24 +40,11 @@ export class DashboardComponent implements OnInit {
     this.loadApi(datesString);
   }
 
-
-
   loadApi(dates: string[]) {
-    const observer: Observer<any> = {
-      next: data => {
-        console.log(' [next]:', data);
-        this.loadChartLine();
-        this.loadChartPie();
-        this.loadChartBar();
-      },
-      error: error => console.warn(' [error]:', error),
-      complete: () => console.info(' [complete]')
-    };
 
-    let retrive$ = this.apiService.getRetrive(dates).pipe(
+    let retriveObs$ = this.apiService.getRetrive(dates).pipe(
       tap(res => {
-        this.response = res;
-        console.log("tap")
+        this.response = res; 
       }),
       map(res => res.values),
       tap(res => {
@@ -68,50 +54,90 @@ export class DashboardComponent implements OnInit {
         this.erroriTotali = res.reduce(
           (accumulator, currentValue) => accumulator + currentValue.total_errors, 0
         );
-        this.tempoRispostaMedio = res.reduce(
+        this.tempoRispostaMedio = Math.round(res.reduce(
           (accumulator, currentValue) => accumulator + currentValue.total_response_time_ms, 0
-        ) / this.chiamateTotali;
+        ) / this.chiamateTotali);
       })
 
     );
-    retrive$.subscribe(observer);
+
+    this.retriveSubs = retriveObs$.subscribe(this.observer);
+
   }
 
-
   loadChartLine() {
-    this.dataLine = {
-      labels: [],
-      data: []
-    };
+    let labels: any[] = [];
+    let data: any[] = [];
     let dataUltimaLine = this.response.values.slice(this.response.values.length - 10);
     dataUltimaLine.forEach(element => {
-      this.dataLine.labels.push(new Date(element.creation_datetime).toUTCString());
-      this.dataLine.data.push(element.total_requests);
+      labels.push(new Date(element.creation_datetime).toUTCString());
+      data.push(element.total_requests);
     });
+
+    this.dataLine = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Ultime 10 chiamate [Values]',
+          data: data,
+          fill: false,
+          backgroundColor: '#0c81eb',
+          borderColor: '#4c81eb',
+          tension: .4
+        },
+      ]
+    };
   }
 
   loadChartPie() {
-    this.percentualeErrori = (this.erroriTotali * 100) / this.chiamateTotali;
-  }
+    let percent = (this.erroriTotali * 100) / this.chiamateTotali;
+    let percentTemp = Math.round(percent);
 
-
-  loadChartBar() {
-    let labelsBar = [1, 2, 3, 4, 5, 6];
-
-    this.dataBar = {
-      labels: [],
-      data: []
+    this.dataPie = {
+      labels: ['Errori', 'Totale'],
+      datasets: [
+        {
+          data: [percentTemp, 100 - percentTemp],
+          backgroundColor: [
+            '#F48FB1',
+            '#4c81eb'
+          ],
+          hoverBackgroundColor: [
+            '#F49FB1',
+            '#6c81eb'
+          ],
+          borderColor: ['#ebedef']
+        }]
     };
 
-    labelsBar.forEach(element => {
-      let total = this.response.values.filter(x => x.key === element).length;
-      this.dataBar.labels.push(element);
-      this.dataBar.data.push(total);
-
-    });
-
   }
 
+  loadChartBar() {
+    let labels = [1, 2, 3, 4, 5, 6];
+    let data: any[] = [];
+
+    labels.forEach(element => {
+      let total = this.response.values.filter(x => x.key === element).length;
+      data.push(total);
+    });
+
+    this.dataBar = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Distribuzione Valori',
+          borderColor: '#0c81eb',
+          backgroundColor: '#4c81eb',
+          data: data
+        },
+
+      ]
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.retriveSubs.unsubscribe();
+  }
 
 }
 

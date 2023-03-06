@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-input-calendar',
   templateUrl: './input-calendar.component.html',
-  styleUrls: ['./input-calendar.component.css']
+  styleUrls: ['./input-calendar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputCalendarComponent implements OnInit {
 
@@ -16,10 +17,12 @@ export class InputCalendarComponent implements OnInit {
   max = new Date('2021-07-21T03:21:00');
 
   ngOnInit(): void {
+    console.log("ngOnInit InputCalendarComponent ");
     this.selectedChange.emit(this.rangeDates);
   }
 
-  onClose(event: Event) { 
+  onClose(event: Event) {
     this.selectedChange.emit(this.rangeDates);
   }
+
 }

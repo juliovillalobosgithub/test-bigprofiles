@@ -1,79 +1,48 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-chart-pie',
   templateUrl: './chart-pie.component.html',
-  styleUrls: ['./chart-pie.component.css']
+  styleUrls: ['./chart-pie.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChartPieComponent implements OnInit, OnChanges {
+export class ChartPieComponent implements OnInit {
 
   @Input()
-  percent: number;
+  data: any;
 
-  pieData: any;
-  pieOptions: any;
+  pieOptions = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (value: any) {
+            return value.formattedValue + '%';
+          }
+        },
+      },
+      legend: {
+        labels: {
+          usePointStyle: true,
+          color: '#ebedef',
+
+        },
+        title: {
+          display: true,
+          text: 'Percentuale Errori',
+          color: '#ebedef',
+        },
+
+      }
+    }
+  };
+  ;
 
 
   constructor() {
   }
 
   ngOnInit() {
-    this.initCharts();
+    console.log("ngOnInit ChartPieComponent ", this.data)
   }
-
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.initCharts();
-  }
-
-  initCharts() {
-    
-    let percentTemp = Math.round(this.percent);
-
-    this.pieData = {
-      labels: ['Errori', 'Totale'],
-      datasets: [
-        {
-          data: [percentTemp, 100 - percentTemp],
-          backgroundColor: [
-            '#F48FB1',
-            '#4c81eb'
-          ],
-          hoverBackgroundColor: [
-            '#F49FB1',
-            '#6c81eb'
-          ],
-          borderColor: ['#ebedef']
-        }]
-    };
-
-
-    this.pieOptions = {
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function(value:any){
-              return  value.formattedValue +'%';
-            }
-          },
-        },
-        legend: {
-          labels: {
-            usePointStyle: true,
-            color: '#ebedef',
-      
-          },
-          title: {
-            display: true,
-            text: 'Percentuale Errori',
-            color: '#ebedef',
-          },
- 
-        }
-      }
-    };
-
-  }
-
 
 }

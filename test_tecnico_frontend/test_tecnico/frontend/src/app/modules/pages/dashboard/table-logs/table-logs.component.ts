@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-table-logs',
   templateUrl: './table-logs.component.html',
-  styleUrls: ['./table-logs.component.css']
+  styleUrls: ['./table-logs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableLogsComponent {
 

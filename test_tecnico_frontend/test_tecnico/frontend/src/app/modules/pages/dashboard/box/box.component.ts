@@ -1,13 +1,12 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { getColor } from '../../../../shared/helpers/functions';
 @Component({
   selector: 'app-box',
   templateUrl: './box.component.html',
-  styleUrls: ['./box.component.css']
+  styleUrls: ['./box.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BoxComponent implements OnInit, OnChanges {
-
-
+export class BoxComponent implements OnInit {
   getColor = getColor;
 
   @Input()
@@ -23,14 +22,7 @@ export class BoxComponent implements OnInit, OnChanges {
   measure: string;
 
   ngOnInit(): void {
-    this.value = this.validationRound(this.value);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.value = this.validationRound(this.value);
-  }
-  validationRound(value: number) {
-    return Math.round(value);
+    console.log("ngOnInit BoxComponent");
   }
 
 }
