@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { ChartFormat } from 'src/app/shared/interfaces/chartFormat';
 
 @Component({
   selector: 'app-chart-bar',
   templateUrl: './chart-bar.component.html',
-  styleUrls: ['./chart-bar.component.css']
+  styleUrls: ['./chart-bar.component.css'], 
 })
 export class ChartBarComponent implements OnInit, OnChanges {
 
@@ -17,7 +17,7 @@ export class ChartBarComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.data)
+    console.log("ngOnInit ChartBarComponent ", this.data)
     this.initCharts();
   }
 
@@ -63,7 +63,7 @@ export class ChartBarComponent implements OnInit, OnChanges {
             display: true,
             text: 'Valori',
             color: '#ebedef',
-        }
+          }
         },
         y: {
           ticks: {
@@ -77,7 +77,7 @@ export class ChartBarComponent implements OnInit, OnChanges {
             display: true,
             text: 'Conteggio',
             color: '#ebedef',
-        }
+          }
         },
       }
     };

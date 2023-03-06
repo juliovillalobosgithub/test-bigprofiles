@@ -21,6 +21,7 @@ export class ChartPieComponent implements OnInit, OnChanges {
     this.initCharts();
   }
 
+
   ngOnChanges(changes: SimpleChanges): void {
     this.initCharts();
   }
